@@ -1,0 +1,130 @@
+body,html{
+	height: 100%;
+}
+
+body{
+	/*background: linear-gradient(150deg,#53f 15%,#05d5ff 70%,#a6ffcb 94%);
+	#ffd89b → #19547b
+	*/
+	background: linear-gradient(to right, rgb(255, 216, 155), rgb(25, 84, 123));
+	background-repeat: no-repeat;
+	font-family: 'Josefin Sans', sans-serif;
+	color: #F0EEEE;
+	
+}
+
+/*get rid of border when buttons are clikced*/
+button:active{
+	outline: none;
+}
+
+/*center div horizontally*/
+.container{
+	width: 90%;
+	height: 100%;
+	margin: 0 auto;
+}
+
+/*utilites*/
+.text-center{
+	text-align: center;
+}
+
+.flex{
+	display: flex;
+}
+
+.flex-center{
+	justify-content: center;
+}
+
+.padding{
+	padding-top:10px;
+	padding-bottom: 10px;
+}
+
+.no-display{
+	display: none;
+}
+
+.display{
+	display: block;
+}
+
+
+/*menu items*/
+/*center div vertically*/
+.menu{
+	/*display: none;*/
+	width: 90%;
+	margin: 0;
+	position: absolute;
+	top: 50%;
+	-ms-transform: translateY(-50%);
+	transform: translateY(-50%);
+}
+
+.Title{
+	padding: 2rem 0;
+}
+
+/*remove button background*/
+.remove-btn-bg{
+	background-color: Transparent;
+    background-repeat:no-repeat;
+    border: none;
+    cursor:pointer;
+    overflow: hidden;
+    outline:none;
+}
+
+.select-difficulity{
+	padding: 5px 15px;
+	margin: 0 10px;
+	border-radius: 5px;
+	border: none;
+	outline:none;
+	font-family: 'Josefin Sans', sans-serif;
+	cursor:pointer;
+	
+}
+
+.bg-green{
+	background-color: #00E515;
+}
+
+.bg-yellow{
+	background-color: #FFFB01;
+}
+
+.bg-red{
+	background-color: #FF0101;
+}
+
+
+/*tile*/
+.border{
+	border: 1px solid black;
+}
+
+.tile{
+	/*display: none;*/
+	width: 30%;
+    margin: 0 auto;
+    /*position div in center*/
+    position: absolute;
+    top: 50%;
+    left: 30%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+	
+}
+
+.row{
+	width: 100%;
+}
+
+.col{
+	height: 100px;
+	flex:1;
+}
