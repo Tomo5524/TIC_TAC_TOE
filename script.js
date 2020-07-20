@@ -2,8 +2,20 @@
 // factories
 // player
 
-const Player = (name,symbol) => {
+const Player = (name) => {
 	return {name,symbol}
+}
+
+// each cell has its coordinate and symbol
+// const spot = (x,y) => {
+// 	let symbol 
+// 	return {x,y,symbol}
+// }
+
+const GameBoard = () => {
+
+	let gameBoard = [0,1,2,3,4,5,6,7,8];
+
 }
 
 
@@ -16,14 +28,16 @@ function createTile(){
 	const tile = document.createElement('div');
 	tile.setAttribute('class', 'tile text-center no-display');
 	container.appendChild(tile)
-
+	let cnt = 0;
 	for (let i = 0; i < 3; i++){
 		row = document.createElement('div');
 		row.setAttribute('class', 'row flex');
 		for (let j = 0; j < 3; j++){
 			col = document.createElement('div');
 			col.setAttribute('class', 'col border');
+			col.setAttribute('id', cnt.toString());
 			row.appendChild(col)
+			cnt++
 		}
 		tile.appendChild(row)
 	}
@@ -67,7 +81,7 @@ function main(){
 		   	}
 		   	CloseMenu(menu)
 		   	createTile()
-		   	display_tile()
+		   	// display_tile()
 
 		   	// AI(level)
 	   })
