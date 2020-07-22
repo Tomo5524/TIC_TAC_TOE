@@ -3,58 +3,83 @@
 // player
 
 const Player = (name) => {
-	return {name,symbol}
+
+	let win_cnt = 0
+	const getWin = () => {
+		win_cnt++
+	}
+
+	return {name,getWin}
 }
 
 // each cell has its coordinate and symbol
-// const spot = (x,y) => {
-// 	let symbol 
-// 	return {x,y,symbol}
-// }
-
-const GameBoard = () => {
-
-	let gameBoard = [0,1,2,3,4,5,6,7,8];
-
+const spot = (loc,symbol) => {
+	return {loc,symbol}
 }
 
+const GameBoard = (function() {
 
-// module
-// createtile
-// main
+	// An empty square is represented by a space character.
+	let gameBoard = ['','','','','','','','',''];
 
-function createTile(){
-	const container = document.querySelector('.container')
-	const tile = document.createElement('div');
-	tile.setAttribute('class', 'tile text-center no-display');
-	container.appendChild(tile)
-	let cnt = 0;
-	for (let i = 0; i < 3; i++){
-		row = document.createElement('div');
-		row.setAttribute('class', 'row flex');
-		for (let j = 0; j < 3; j++){
-			col = document.createElement('div');
-			col.setAttribute('class', 'col border');
-			col.setAttribute('id', cnt.toString());
-			row.appendChild(col)
-			cnt++
-		}
-		tile.appendChild(row)
+	// create symbol
+	const symbol_x = document.createElement('p');
+	symbol_x.innerHTML = 'X'
+	symbol_x.setAttribute('class', 'flex flex-center align-center');
+
+
+	const createTile = () => {
+		const container = document.querySelector('.container')
+		const tile = document.createElement('div');
+		tile.setAttribute('class', 'tile text-center no-display');
+		container.appendChild(tile)
+		let cnt = 0;
+		for (let i = 0; i < 3; i++){
+			row = document.createElement('div');
+			row.setAttribute('class', 'row flex');
+			for (let j = 0; j < 3; j++){
+				col = document.createElement('div');
+				col.setAttribute('class', 'col border');
+				col.setAttribute('id', cnt.toString());
+				row.appendChild(col)
+				cnt++
+				col.addEventListener('click',(e) => {
+					console.log(col)
+					console.log(e)
+					col.appendChild(symbol_x)
+				})
+
+
+			}
+			tile.appendChild(row)
+		}	
+		tile.classList.remove('no-display')
 	}
-	tile.classList.remove('no-display')
-}
 
-function CloseMenu(menu){
-	console.log(menu)
-	menu.classList.add('no-display')
-}
 
-function OpenMenu(){
-	menu.classList.remove('no-display')
-}
+	return {gameBoard,createTile}
+
+
+
+
+})();
+	
+
+const GamePlay = (function() {
+
+	// display symbols
+
+
+
+})();
+
+
+
+
+
 
 	
-function main(){
+const getLevel = (function () {
 	// get element
 	const menu = document.querySelector('.menu');
 	// console.log(menu)
@@ -80,14 +105,21 @@ function main(){
 		   		level = 'hard'
 		   	}
 		   	CloseMenu(menu)
-		   	createTile()
+		   	// with this you are able to call from outside of scope
+		   	GameBoard.createTile()
 		   	// display_tile()
 
 		   	// AI(level)
 	   })
 	}
+
+	function CloseMenu(menu){
+		// console.log(menu)
+		menu.classList.add('no-display')
+	}
+	function OpenMenu(){
+		menu.classList.remove('no-display')
+	}
 	
 
-}
-
-main()
+})();

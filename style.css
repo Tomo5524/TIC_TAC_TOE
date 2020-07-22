@@ -38,6 +38,10 @@ button:active{
 	justify-content: center;
 }
 
+.align-center{
+	align-items: center;
+}
+
 .padding{
 	padding-top:10px;
 	padding-bottom: 10px;
