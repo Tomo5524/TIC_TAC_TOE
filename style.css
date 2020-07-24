@@ -132,3 +132,9 @@ button:active{
 	height: 100px;
 	flex:1;
 }
+
+
+/*symbol*/
+.symbol{
+	height: 100%;
+}
