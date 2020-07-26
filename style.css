@@ -118,7 +118,7 @@ button:active{
     /*position div in center*/
     position: absolute;
     top: 50%;
-    left: 30%;
+    left: 35%;
     -ms-transform: translateY(-50%);
     transform: translateY(-50%);
 	
@@ -133,8 +133,36 @@ button:active{
 	flex:1;
 }
 
+/*player icon*/
+
+.player-icon{
+	padding: 0;
+	margin: 0 10px;
+}
+
+.two-players{
+	height: 14px;
+}
+
+/*player text box*/
+.player-input{
+	margin: 0 10px;
+	background-color: Transparent;
+    background-repeat:no-repeat;
+    outline:none;
+    border: 0px none;
+    border-bottom: 1px solid #333;
+}
+
+
 
 /*symbol*/
 .symbol{
 	height: 100%;
+}
+
+
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: #333;
+  opacity: 0.8; /* Firefox */
 }
