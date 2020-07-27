@@ -38,6 +38,14 @@ button:active{
 	justify-content: center;
 }
 
+.flex-end{
+	align-items: flex-end;
+}
+
+.space-around{
+	justify-content: space-around;
+}
+
 .align-center{
 	align-items: center;
 }
@@ -53,6 +61,13 @@ button:active{
 
 .display{
 	display: block;
+}
+
+.bg-change{
+	/* Add the blur effect */
+	background-color: rgba(0,0,0,0.1);
+	/*filter: blur(0.5px);
+	-webkit-filter: blur(0.5px);*/
 }
 
 
@@ -82,7 +97,12 @@ button:active{
     outline:none;
 }
 
+.bar{
+	padding-left: 35px;
+}
+
 .select-difficulity{
+    
 	padding: 5px 15px;
 	margin: 0 10px;
 	border-radius: 5px;
@@ -154,11 +174,39 @@ button:active{
     border-bottom: 1px solid #333;
 }
 
+/*status display*/
+.status-div{
+	height: 23%;
+}
 
+/*number stats*/
+.number-display{
+	padding: 10px;
+	border-bottom: 1px solid #333;
+}
 
 /*symbol*/
 .symbol{
 	height: 100%;
+	font-size: 50px;
+}
+
+/*rematch button*/
+.rematch-div{
+	position: relative;
+	top: 30px;
+	border-radius: 10px;
+
+}
+
+.rematch-btn{
+	background: linear-gradient(90deg, rgba(255,59,0,1) 0%, rgba(255,162,0,1) 33%, rgba(172,255,0,1) 100%);
+	color: white;
+	font-size: 22px;
+	outline:none;
+	cursor: pointer;
+	padding: 15px 30px;
+	border-radius: 10px;
 }
 
 

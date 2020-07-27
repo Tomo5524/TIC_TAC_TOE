@@ -163,6 +163,7 @@ const Menu = (function() {
 		let p2Name = name_input_p2.value !== "" ? name_input_p2.value : "PLAYER 2"
 		GamePlay.GamePlayObj.p2 = Player(p2Name.toUpperCase(), "O")
 
+
 		GameBoard.createTile() // create board
 		GameBoard.displayPlayers()
 		Close(menu) // close menu
@@ -193,14 +194,17 @@ const GameBoard = (function() {
 		gameBoard : [],
 		p1_turn : true,
 		p2_turn : false,
-		seen : false
-		// symbol : ''
+		seen : false,
+		p1_win : 0,
+		p2_win : 0,
+		ties : 0
 	}
 
+
+	const container = document.querySelector('.container')
+	const tile = document.createElement('div'); // make it accesible so rematch btn can access it
 	// create symbol
 	const createTile = () => {
-		const container = document.querySelector('.container')
-		const tile = document.createElement('div');
 		tile.setAttribute('class', 'tile text-center no-display');
 		container.appendChild(tile)
 		for (let i = 0; i < 3; i++){
@@ -236,7 +240,45 @@ const GameBoard = (function() {
 
 
 	const displayPlayers = () => {
+		const status_div = document.createElement('div');
+		status_div.setAttribute('class', 'status-div flex space-around align-center');
 
+		const p1_stats = document.createElement('h2');
+		p1_stats.setAttribute('class', 'p1_stats');
+		p1_stats.innerHTML = GamePlay.GamePlayObj.p1.name;
+
+		const p1_stats_win = document.createElement('p');
+		p1_stats_win.setAttribute('class', 'p1-wins number-display text-center');
+		p1_stats_win.innerHTML = GameBoardObj.p1_win;
+
+		p1_stats.appendChild(p1_stats_win)
+
+		const ties = document.createElement('h2');
+		ties.setAttribute('class', 'ties');
+		ties.innerHTML = 'Ties'
+
+		const ties_num = document.createElement('p');
+		ties_num.setAttribute('class', 'number-display text-center');
+		ties_num.innerHTML = GameBoardObj.ties;
+
+		ties.appendChild(ties_num)
+
+		const p2_stats = document.createElement('h2');
+		p2_stats.setAttribute('class', 'p2_stats');
+		p2_stats.innerHTML = GamePlay.GamePlayObj.p2.name
+
+		const p2_stats_win = document.createElement('p');
+		p2_stats_win.setAttribute('class', 'number-display text-center');
+		p2_stats_win.innerHTML = GameBoardObj.p2_win;
+
+		p2_stats.appendChild(p2_stats_win)
+
+		container.appendChild(status_div)
+		status_div.appendChild(p1_stats)
+		status_div.appendChild(ties)
+		status_div.appendChild(p2_stats)
+
+		return {p1_stats,p1_stats_win}
 	}
 
 	function renderSymbol(cur_loc){
@@ -265,10 +307,37 @@ const GameBoard = (function() {
 		GameBoardObj.p2_turn = !GameBoardObj.p1_turn ? true : false
 	}
 
+	// rematch itmes
+	const rematch_div = document.createElement('div');
+	rematch_div.setAttribute('class', 'rematch-div');
+	const rematch_btn = document.createElement('button');
+	rematch_btn.setAttribute('class', 'rematch-btn');
+	rematch_btn.innerHTML = 'REMATCH'
+
+	const win_text = document.createElement('h2');
+	win_text.setAttribute('class', 'win-text');
+
+	
 	function displayWin(name){
-		
+		// container.classList.add("bg-change")
+		tile.appendChild(rematch_div)
+		rematch_div.appendChild(rematch_btn)
+
+		if (name === GamePlay.GamePlayObj.p1.name){
+			console.log(displayPlayers.p1_stats_win)
+			// get all varibales outside of function of displayPlayers 
+			win_text.innerHTML = GamePlay.GamePlayObj.p1.name + " Win!"
+			displayPlayers.p1_stats_win.appendChild(win_text)
+			
+		}
+		else if (name === GamePlay.GamePlayObj.p2.name){
+
+		}
 	}
 
+
+
+	// these functions are accessible globally
 	return {GameBoardObj,displayPlayers,createTile}
 
 })();
@@ -284,6 +353,8 @@ const GamePlay = (function() {
 		p2 : {}
 	}
 
+	// having variable here makes this board updated all the time
+	// getting gameboard through argument is not updated
 	const board = GameBoard.GameBoardObj.gameBoard
 
 	const get_p1 = (player) => {
