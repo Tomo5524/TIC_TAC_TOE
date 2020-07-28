@@ -209,6 +209,10 @@ button:active{
 	border-radius: 10px;
 }
 
+.result-div{
+	padding-bottom: 30px;
+}
+
 
 ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
   color: #333;

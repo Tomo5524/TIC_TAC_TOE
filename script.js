@@ -38,7 +38,7 @@ const Menu = (function() {
 	let level
 	for (let i = 0 ; i < btn.length; i++) {
 		// console.log(btn[i])
-	   	btn[i].addEventListener('click',( e) => {
+	   	btn[i].addEventListener('click',(e) => {
 		   	
 		   	if (e.target.classList[1] === 'bg-green'){
 		   		level = 'easy'
@@ -197,7 +197,9 @@ const GameBoard = (function() {
 		seen : false,
 		p1_win : 0,
 		p2_win : 0,
-		ties : 0
+		ties : 0,
+		rematch_on : false,
+		turn_cnt : 1,
 	}
 
 
@@ -226,58 +228,76 @@ const GameBoard = (function() {
 
 		// activate all columns
 		GameBoardObj.gameBoard.forEach(node => node.addEventListener("click", (e) => {
-			// avoid getting error message for duplicates, input is already entered on current cell
-			if (e.target.id){
-				let cur_loc = e.target.id
-				// console.log(GameBoardObj.gameBoard[cur_loc].innerHTML)
-				if (!GameBoardObj.gameBoard[cur_loc].seen){
-					GameBoardObj.gameBoard[cur_loc].seen =  true;
+		
+			if (!GameBoardObj.rematch_on){
+				// avoid getting error message for duplicates, input is already entered on current cell
+				if (!node.seen){
+					let cur_loc = e.target.id
 					renderSymbol(cur_loc)
-				}			
+					node.seen = true
+					// console.log(GameBoardObj.gameBoard[cur_loc].innerHTML)
+					// if (!GameBoardObj.gameBoard[cur_loc].seen){
+					// 	GameBoardObj.gameBoard[cur_loc].seen =  true;
+					// 	// renderSymbol(cur_loc)
+					// }			
+				}		
 			}			
 		}));
-	}
+	}	
 
+	const p1_stats_win = document.createElement('p');
+	const p2_stats_win = document.createElement('p');
+	const ties_num = document.createElement('p');
 
 	const displayPlayers = () => {
+
+		// have them outside of function so they are accessible locally
 		const status_div = document.createElement('div');
+		const display_box1 = document.createElement('div');
+		const display_box2 = document.createElement('div');
+		const display_box3 = document.createElement('div');
+		const p1_stats = document.createElement('h2');
+		const ties = document.createElement('h2');			
+		const p2_stats = document.createElement('h2');
+		
 		status_div.setAttribute('class', 'status-div flex space-around align-center');
 
-		const p1_stats = document.createElement('h2');
+		display_box1.setAttribute('class', 'display-div1');
+		display_box2.setAttribute('class', 'display-div2');
+		display_box3.setAttribute('class', 'display-div3');		
+
 		p1_stats.setAttribute('class', 'p1_stats');
 		p1_stats.innerHTML = GamePlay.GamePlayObj.p1.name;
 
-		const p1_stats_win = document.createElement('p');
 		p1_stats_win.setAttribute('class', 'p1-wins number-display text-center');
 		p1_stats_win.innerHTML = GameBoardObj.p1_win;
 
-		p1_stats.appendChild(p1_stats_win)
+		p1_stats.appendChild(p1_stats_win);
+		display_box1.appendChild(p1_stats)
 
-		const ties = document.createElement('h2');
 		ties.setAttribute('class', 'ties');
 		ties.innerHTML = 'Ties'
-
-		const ties_num = document.createElement('p');
+		
 		ties_num.setAttribute('class', 'number-display text-center');
 		ties_num.innerHTML = GameBoardObj.ties;
 
 		ties.appendChild(ties_num)
+		display_box2.appendChild(ties)
 
-		const p2_stats = document.createElement('h2');
 		p2_stats.setAttribute('class', 'p2_stats');
 		p2_stats.innerHTML = GamePlay.GamePlayObj.p2.name
 
-		const p2_stats_win = document.createElement('p');
 		p2_stats_win.setAttribute('class', 'number-display text-center');
 		p2_stats_win.innerHTML = GameBoardObj.p2_win;
 
 		p2_stats.appendChild(p2_stats_win)
+		display_box3.appendChild(p2_stats)
 
 		container.appendChild(status_div)
-		status_div.appendChild(p1_stats)
-		status_div.appendChild(ties)
-		status_div.appendChild(p2_stats)
-
+		status_div.appendChild(display_box1)
+		status_div.appendChild(display_box2)
+		status_div.appendChild(display_box3)
+		
 		return {p1_stats,p1_stats_win}
 	}
 
@@ -292,6 +312,10 @@ const GameBoard = (function() {
 			if (GamePlay.winCheck(GamePlay.GamePlayObj.p1.symbol)){
 				displayWin(GamePlay.GamePlayObj.p1.name)
 			}
+
+			else if (GameBoard.GameBoardObj.turn_cnt === 9){
+				displayWin('tie')
+			}
 		} else if (GameBoardObj.p2_turn){
 			symbol_x.innerHTML = GamePlay.GamePlayObj.p2.symbol
 			GameBoardObj.gameBoard[cur_loc].symbol = GamePlay.GamePlayObj.p2.symbol
@@ -300,11 +324,17 @@ const GameBoard = (function() {
 			if (GamePlay.winCheck(GamePlay.GamePlayObj.p2.symbol)){
 				displayWin(GamePlay.GamePlayObj.p2.name)
 			}
+			else if (GameBoard.GameBoardObj.turn_cnt === 9){
+				displayWin('tie')
+			}
 		}
 
 		// get player turn to determine symbol
 		GameBoardObj.p1_turn = GameBoardObj.p2_turn ? true : false
 		GameBoardObj.p2_turn = !GameBoardObj.p1_turn ? true : false
+
+		// increment turn
+		GameBoardObj.turn_cnt++
 	}
 
 	// rematch itmes
@@ -312,30 +342,82 @@ const GameBoard = (function() {
 	rematch_div.setAttribute('class', 'rematch-div');
 	const rematch_btn = document.createElement('button');
 	rematch_btn.setAttribute('class', 'rematch-btn');
-	rematch_btn.innerHTML = 'REMATCH'
+	rematch_btn.innerHTML = 'REMATCH';
+	let already_played = false;
 
-	const win_text = document.createElement('h2');
-	win_text.setAttribute('class', 'win-text');
+	// add addEventListener to rematch_btn
+	// this prvents users from entering input after the game is over
+	rematch_btn.addEventListener("click", (e) => {
+		GameBoardObj.rematch_on = false;
+		resetBoard()
+		result_div.removeChild(result_div.lastElementChild)
+		rematch_div.removeChild(rematch_div.lastElementChild)
+		// rematch_div.classList.add('no-display')
+		// result_div.classList.add('no-display')
+		already_played = true;
+		// reset board
+		// nodisplay rematch-btn
+	});
 
+	const result_div = document.createElement('div');
+	result_div.setAttribute('class', 'result-div');
+	const result_text = document.createElement('h2');
+	result_text.setAttribute('class', 'result_text text-center');
+	tile.appendChild(result_div)
+	rematch_div.appendChild(rematch_btn)
+	result_div.appendChild(result_text)
 	
+
 	function displayWin(name){
 		// container.classList.add("bg-change")
 		tile.appendChild(rematch_div)
-		rematch_div.appendChild(rematch_btn)
+		GameBoardObj.rematch_on = true;
 
 		if (name === GamePlay.GamePlayObj.p1.name){
-			console.log(displayPlayers.p1_stats_win)
-			// get all varibales outside of function of displayPlayers 
-			win_text.innerHTML = GamePlay.GamePlayObj.p1.name + " Win!"
-			displayPlayers.p1_stats_win.appendChild(win_text)
-			
+			// get all variavles outside of function
+			result_text.innerHTML = GamePlay.GamePlayObj.p1.name + " Win!"			
+			GameBoardObj.p1_win++
+			p1_stats_win.innerHTML = GameBoardObj.p1_win;
 		}
 		else if (name === GamePlay.GamePlayObj.p2.name){
+			result_text.innerHTML = GamePlay.GamePlayObj.p2.name + " Win!"			
+			GameBoardObj.p2_win++
+			p2_stats_win.innerHTML = GameBoardObj.p2_win;
+		}
 
+		// tie
+		else if (name === 'tie'){
+			result_text.innerHTML = 'Tie!'		
+			GameBoardObj.ties++
+			ties_num.innerHTML = GameBoardObj.ties;
+		}
+
+		if (already_played){
+			rematch_div.appendChild(rematch_btn)
+			result_div.appendChild(result_text)
 		}
 	}
 
+	const resetBoard = () =>{
+		// for (let i = 0; i < GameBoardObj.gameBoard.length; i++){
+		// 	GameBoardObj.gameBoard[i].symbol = ''
+		// 	while (GameBoardObj.gameBoard[i].lastElementChild) {
+		// 	    GameBoardObj.gameBoard[i].removeChild(GameBoardObj.gameBoard[i].lastElementChild);
+		// 	}
+		// }
+		GameBoardObj.gameBoard.forEach(node => {
+			// update gameBoard as well
+			node.seen = false;
 
+			// board is not updated
+			node.symbol = ''
+			GameBoardObj.turn_cnt = 1;
+			// remove all child 
+			while (node.lastElementChild) {
+			    node.removeChild(node.lastElementChild);
+			}
+		});
+	}
 
 	// these functions are accessible globally
 	return {GameBoardObj,displayPlayers,createTile}
@@ -356,7 +438,7 @@ const GamePlay = (function() {
 	// having variable here makes this board updated all the time
 	// getting gameboard through argument is not updated
 	const board = GameBoard.GameBoardObj.gameBoard
-
+	
 	const get_p1 = (player) => {
 		GamePlayObj.p1 = player
 	}
@@ -375,26 +457,23 @@ const GamePlay = (function() {
 
 	
 	const winCheck = (player_symbol) => {
-		console.log(player_symbol)
 		if (
-            (board[0].symbol == player_symbol && board[1].symbol == player_symbol && board[2].symbol == player_symbol) ||
-            (board[3].symbol == player_symbol && board[4].symbol == player_symbol && board[5].symbol == player_symbol) ||
-            (board[6].symbol == player_symbol && board[7].symbol == player_symbol && board[8].symbol == player_symbol) ||
-            (board[0].symbol == player_symbol && board[3].symbol == player_symbol && board[6].symbol == player_symbol) ||
-            (board[1].symbol == player_symbol && board[4].symbol == player_symbol && board[7].symbol == player_symbol) ||
-            (board[2].symbol == player_symbol && board[5].symbol == player_symbol && board[8].symbol == player_symbol) ||
-            (board[0].symbol == player_symbol && board[4].symbol == player_symbol && board[8].symbol == player_symbol) ||
-            (board[2].symbol == player_symbol && board[4].symbol == player_symbol && board[6].symbol == player_symbol)
+            (board[0].symbol === player_symbol && board[1].symbol === player_symbol && board[2].symbol === player_symbol) ||
+            (board[3].symbol === player_symbol && board[4].symbol === player_symbol && board[5].symbol === player_symbol) ||
+            (board[6].symbol === player_symbol && board[7].symbol === player_symbol && board[8].symbol === player_symbol) ||
+            (board[0].symbol === player_symbol && board[3].symbol === player_symbol && board[6].symbol === player_symbol) ||
+            (board[1].symbol === player_symbol && board[4].symbol === player_symbol && board[7].symbol === player_symbol) ||
+            (board[2].symbol === player_symbol && board[5].symbol === player_symbol && board[8].symbol === player_symbol) ||
+            (board[0].symbol === player_symbol && board[4].symbol === player_symbol && board[8].symbol === player_symbol) ||
+            (board[2].symbol === player_symbol && board[4].symbol === player_symbol && board[6].symbol === player_symbol)
           ) {
-          	console.log('win')
             return true;
-          } else {
-          	console.log('not yet')
+          } 
+          else {      
             return false;
           }
 	}
 	
-	// console.log(AI_level)
 	
 	return {GamePlayObj,
 			board,
