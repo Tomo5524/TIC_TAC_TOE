@@ -13,14 +13,14 @@ const Player = (name,symbol) => {
 }
 
 // each cell has its coordinate and symbol
-const Spot = (loc) => {
-	return {loc}
-}
+// const Spot = (loc) => {
+// 	return {loc}
+// }
 
 // this is accessible globally
-const printHiya = () => {
-	console.log('logic hiya')
-}
+// const printHiya = () => {
+// 	console.log('logic hiya')
+// }
 
 const Menu = (function() {
 
@@ -50,13 +50,11 @@ const Menu = (function() {
 		   	else if (e.target.classList[1] === 'bg-red'){
 		   		level = 'hard'
 		   	}
-		   	// close menu when ready is clicked
-		   	// Close(menu)
+		   	
 
 		   	// with this you are able to call from outside of scope
 		   	// GameBoard.createTile()
 		   	GamePlay.getAI_level(level)	   
-		   	// printHiya()
 	   })
 	};   
 
@@ -69,9 +67,7 @@ const Menu = (function() {
 	let player_arr = [single_player,two_player]
 	let single_mode;
 	player_arr.forEach(node => node.addEventListener("click", (e) => {
-		console.log(e.target)
 		
-		// console.log(GameBoard.returnHiya())
 		if (e.target.classList[1] === 'fa-user'){
 			multi_player = false
 			// MenuObj.multi_player = false
